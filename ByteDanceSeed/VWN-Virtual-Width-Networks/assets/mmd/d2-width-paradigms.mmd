@@ -1,0 +1,25 @@
+flowchart LR
+    subgraph S1["(a) 标准 Transformer：宽度处处一致"]
+        direction TB
+        E1["嵌入 D"] --> L1["层1 D<br/>Attn+FFN"]
+        L1 --> L2["层2 D"]
+        L2 --> H1["输出头 D"]
+    end
+
+    subgraph S2["(b) 朴素宽度扩展：参数与算力二次增长"]
+        direction TB
+        E2["嵌入 2D"] --> M1["层1 2D<br/>Attn+FFN"]
+        M1 --> M2["层2 2D"]
+        M2 --> H2["输出头 2D"]
+        N2["参数量 ×2<br/>计算量 ×4"]
+    end
+
+    subgraph S3["(c) VWN：只加宽嵌入与层间表示"]
+        direction TB
+        E3["超宽嵌入 r·D"] --> G1["GHC<br/>压缩到 D"]
+        G1 --> A1["层1 D<br/>Attn+FFN 算力不变"]
+        A1 --> G2["GHC<br/>扩回 r·D 并更新"]
+        G2 --> A2["层2 D"]
+        A2 --> R1["降维 W_reduce<br/>+ GroupNorm"]
+        R1 --> H3["输出头 D"]
+    end

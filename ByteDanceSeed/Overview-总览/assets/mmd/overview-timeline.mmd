@@ -1,0 +1,23 @@
+flowchart LR
+    subgraph Q1["2025 Q1"]
+        OE["2025-01-28<br/>Over-Encoding<br/>输入词表 ×128"]
+        FP["2025-02-28<br/>FlexPrefill<br/>免训练 prefill 稀疏"]
+    end
+    subgraph Q2["2025 Q2"]
+        PHD["2025-04-21<br/>PHD-SWA<br/>重复 token + KV 生命周期"]
+        TD["2025-04-28<br/>Triton-distributed<br/>通算融合 + shmem"]
+    end
+    subgraph Q4["2025 Q4"]
+        VWN["2025-11-14<br/>VWN<br/>超宽嵌入 + GHC"]
+    end
+    subgraph AFTER["关键技术点的后续（用于定位影响）"]
+        MHC["2025-12-31 mHC · DeepSeek<br/>V4 采用 hc_mult=4"]
+        ENG["2026-01 Engram · 北大+DeepSeek<br/>条件记忆成为第 4 条稀疏轴"]
+        HD["2026-07 Hidden Decoding · 腾讯<br/>独立接棒到 617B"]
+        EAGLE["2026 vllm-ascend VWN-Eagle3<br/>r=1.5 落地"]
+    end
+    OE --> FP --> PHD --> TD --> VWN
+    VWN -.-> MHC
+    OE -.-> ENG
+    PHD -.-> HD
+    VWN -.-> EAGLE

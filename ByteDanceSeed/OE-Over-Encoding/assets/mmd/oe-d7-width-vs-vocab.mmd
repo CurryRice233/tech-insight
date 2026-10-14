@@ -1,0 +1,12 @@
+flowchart LR
+    subgraph OE["Over-Encoding（本篇）"]
+        O1["放大输入词表 V → m<br/>词表维度"] --> O2["每 token 仍是 D 维<br/>但 id 空间大 128×"]
+        O2 --> O3["嵌入求和<br/>成本 = 查表"]
+    end
+    subgraph VWN["Virtual Width Networks（第 1 篇）"]
+        V1["放大嵌入向量维度 D → r·D<br/>表示维度"] --> V2["每 token 向量变宽<br/>词表不变"]
+        V2 --> V3["GHC 压缩/写回<br/>成本 = 小矩阵"]
+    end
+    O3 --> SAME["共同点：<br/>都在\"嵌入/残差\"的稀疏侧扩容<br/>骨干算力几乎不变"]
+    V3 --> SAME
+    SAME --> COMB["可叠加：<br/>OE 提供更大 id 空间<br/>VWN 提供更宽向量空间"]

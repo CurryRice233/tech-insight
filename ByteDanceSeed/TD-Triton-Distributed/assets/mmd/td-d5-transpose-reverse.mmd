@@ -1,0 +1,14 @@
+flowchart LR
+    subgraph T["transpose all-to-all（正向 / dispatch）"]
+        direction TB
+        T1["本地 QKV 投影 GEMM"] --> T2["GEMM epilogue 直接<br/>远端写（putmem）"]
+        T2 --> T3["远端 rank 收到<br/>(seq×P, head/P)"]
+        T3 --> T4["本地 attention"]
+    end
+    subgraph R["reverse all-to-all（反向 / combine）"]
+        direction TB
+        R1["本地 attention 输出"] --> R2["远端读（getmem）<br/>拼回 (seq, 全 head)"]
+        R2 --> R3["GEMM prologue 直接消费"]
+        R3 --> R4["本地 O 投影 GEMM"]
+    end
+    T4 -.->|"attention 之后"| R1

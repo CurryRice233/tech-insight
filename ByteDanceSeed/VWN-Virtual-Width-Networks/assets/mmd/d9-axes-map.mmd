@@ -1,0 +1,17 @@
+flowchart TB
+    GOAL["共同目标：在近乎固定的单 token 算力下扩大容量"]
+
+    GOAL --> AX1["嵌入/宽度轴<br/>VWN · Over-Encoding · AltUp"]
+    GOAL --> AX2["残差流轴<br/>HC → mHC → xHC → s²HC"]
+    GOAL --> AX3["序列/深度轴<br/>AttnRes · Dreamer · Hidden Decoding"]
+    GOAL --> AX4["专家/潜在轴<br/>LatentMoE · MoUE · 细粒度 MoE"]
+    GOAL --> AX5["监督轴<br/>MTP（与上述均可组合）"]
+
+    AX1 --> L1["落地：VWN-Eagle3<br/>r=1.5 草稿模型"]
+    AX2 --> L2["落地：DeepSeek V4 / V4.1<br/>hc_mult=4"]
+    AX3 --> L3["落地：Kimi Linear / WeLM-HD4"]
+    AX4 --> L4["落地：Nemotron-3 Super/Ultra"]
+    AX5 --> L5["落地：DeepSeek / GLM / Qwen / Nemotron"]
+
+    AX1 -.->|"机制互补但互不引用"| AX2
+    AX3 -.->|"轴间可能存在等价换算"| AX1

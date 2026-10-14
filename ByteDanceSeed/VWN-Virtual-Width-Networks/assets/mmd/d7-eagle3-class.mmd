@@ -1,0 +1,37 @@
+classDiagram
+    class PreVwnLayerV1 {
+        +int m
+        +int hidden_size
+        +int wider_dim
+        +RMSNorm input_layernorm
+        +RMSNorm hidden_norm
+        +Linear fc
+        +Linear upward
+        +forward(embeds, hidden_states) Tensor
+    }
+    class VwnLlamaDecoderLayer {
+        +int m
+        +int wider_dim
+        +int layer_idx
+        +Linear downward_and_forgot
+        +Linear upward_after_attn
+        +Linear downward_and_forgot_after_attn
+        +Linear upward_after_mlp
+        +Linear downward
+        +forward(positions, embeds, hidden_states, residual) Tuple
+    }
+    class VwnLlamaModel {
+        +bool use_aux_hidden_state
+        +VocabParallelEmbedding embed_tokens
+        +ModuleList layers
+        +forward(input_ids, positions, hidden_states, input_embeds) Tuple
+    }
+    class Eagle3VwnLlamaForCausalLM {
+        +VwnLlamaModel model
+        +ParallelLMHead lm_head
+        +compute_logits(hidden_states) Tensor
+        +combine_hidden_states(hidden_states) Tensor
+    }
+    Eagle3VwnLlamaForCausalLM *-- VwnLlamaModel
+    VwnLlamaModel *-- VwnLlamaDecoderLayer
+    VwnLlamaDecoderLayer *-- PreVwnLayerV1

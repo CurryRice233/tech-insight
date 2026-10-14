@@ -1,0 +1,17 @@
+flowchart TB
+    subgraph A["A 类：host-initiated（通信是算子之外的独立动作）"]
+        A1["PyTorch DDP：梯度分桶 + 反向重叠 all-reduce"]
+        A2["ZeRO / ZeRO-Offload"]
+        A3["DualPipe（DeepSeek 官方，最关键的 A 类代表）"]
+        A4["异步 all-gather / 异步 TP / CUDA stream + NCCL 原语"]
+        A5["特征：CPU 下发通信、stream 级并行、通信与计算是<br/>两个独立 kernel，靠流水线「时间上」重叠"]
+    end
+    subgraph B["B 类：device-initiated（通信指令嵌入 kernel）"]
+        B1["NVSHMEM：OpenSHMEM 的 NVIDIA 实现，GPU 发起单边通信"]
+        B2["MSCCL++（Microsoft，GPU-driven）"]
+        B3["DeepEP（DeepSeek）：EP dispatch/combine"]
+        B4["Triton-distributed（本次主角）：编译器 + 原语 + kernel 库"]
+        B5["特征：SM 在 kernel 内直接 put/get 远端显存，<br/>靠信号量同步，通信与计算「空间上」融合"]
+    end
+    A -->|"演进动机：<br/>细粒度对齐数据布局"| B
+    style B4 fill:#ffe9b0

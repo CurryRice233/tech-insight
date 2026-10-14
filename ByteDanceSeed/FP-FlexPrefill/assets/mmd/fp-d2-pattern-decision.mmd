@@ -1,0 +1,11 @@
+flowchart TB
+    START["输入 Q, K（某 head、某层）"] --> REP["取最后 block_size 个 query 作为 Q̂"]
+    REP --> EST["池化估计：<br/>ā = softmax(avgpool(Q̂)·avgpool(K)ᵀ/√d)"]
+    EST --> TRUE["真实分布：<br/>â = sumpool(softmax(Q̂·Kᵀ/√d))"]
+    TRUE --> JS["计算 D_JS(ā,â)"]
+    JS --> CMP{"D_JS < τ ?"}
+    CMP -->|"是：估计可信"| QA["Query-Aware 模式<br/>对所有 query 计算 ā<br/>按块累计权重选索引"]
+    CMP -->|"否：估计不可信"| VS["Vertical-Slash 模式<br/>用代表 query 估竖线/斜线<br/>排序后外推到全局索引集"]
+    QA --> ATT["稀疏注意力 A(Q,K,V,S)"]
+    VS --> ATT
+    ATT --> OUT["输出"]

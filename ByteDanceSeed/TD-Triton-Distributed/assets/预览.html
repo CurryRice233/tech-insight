@@ -1,0 +1,18 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+<title>Seed Triton-distributed 技术洞察 · 图表预览</title>
+<style>body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;margin:24px;background:#fafafa;color:#222}
+h1{font-size:20px}h2{font-size:15px;margin-top:28px;color:#444}
+figure{margin:0 0 18px;background:#fff;border:1px solid #e3e3e3;border-radius:10px;padding:12px;overflow:auto}
+img{max-width:100%;height:auto;cursor:zoom-in}figcaption{font-size:12px;color:#666;margin-top:8px}
+img:active{max-width:none}</style></head><body>
+<h1>ByteDance Seed Triton-distributed 技术洞察 · 图表预览</h1>
+<p style="font-size:13px;color:#666">对应文档：Seed-Triton-distributed-技术洞察.md ｜ 渲染源：assets/mmd/*.mmd</p>
+<h2>图 1 · host-initiated vs device-initiated 两条路线（§1.2）</h2><figure><img src="td-d1-host-vs-device.png" alt="td-d1-host-vs-device"><figcaption>td-d1-host-vs-device</figcaption></figure>
+<h2>图 2 · 通信成本 / 序列并行 / 多厂商三条线索（§1.5）</h2><figure><img src="td-d2-problem-map.png" alt="td-d2-problem-map"><figcaption>td-d2-problem-map</figcaption></figure>
+<h2>图 3 · 编译器实体与 lowering 路径（§2.3）</h2><figure><img src="td-d3-compiler.png" alt="td-d3-compiler"><figcaption>td-d3-compiler</figcaption></figure>
+<h2>图 4 · shmem 门面与五个后端实现（§2.4）</h2><figure><img src="td-d4-shmem-backends.png" alt="td-d4-shmem-backends"><figcaption>td-d4-shmem-backends</figcaption></figure>
+<h2>图 5 · transpose 与 reverse all-to-all 的数据流（§2.5.2）</h2><figure><img src="td-d5-transpose-reverse.png" alt="td-d5-transpose-reverse"><figcaption>td-d5-transpose-reverse</figcaption></figure>
+<h2>图 6 · 类图（§2.6，UML classDiagram）</h2><figure><img src="td-d6-class.png" alt="td-d6-class"><figcaption>td-d6-class</figcaption></figure>
+<h2>图 7 · 序列并行通算融合时序（§2.7，UML sequenceDiagram）</h2><figure><img src="td-d7-sequence.png" alt="td-d7-sequence"><figcaption>td-d7-sequence</figcaption></figure>
+<h2>图 8 · 相对 PyTorch+NCCL 的加速比（§2.8.1）</h2><figure><img src="td-d8-speedup.png" alt="td-d8-speedup"><figcaption>td-d8-speedup</figcaption></figure>
+</body></html>

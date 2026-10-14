@@ -1,0 +1,38 @@
+classDiagram
+    class TransformerBlock {
+        +int layer_index
+        +forward(h) Tensor
+    }
+    class GHyperConnection {
+        +int m
+        +int n_in
+        +int n_out
+        +float factor
+        +Tensor static_alpha
+        +Tensor static_beta
+        +Tensor dynamic_alpha_fn
+        +Tensor dynamic_alpha_scale
+        +Tensor dynamic_beta_fn
+        +Tensor dynamic_beta_scale
+        +RMSNorm layer_norm
+        +width_connection(h) Tuple
+        +depth_connection(mix_h, h_o, beta) Tensor
+    }
+    class VWNStack {
+        +int L
+        +int r
+        +Tensor over_width_embedding
+        +Tensor reduce_operator
+        +GroupNorm group_norm
+        +forward(tokens) Tensor
+    }
+    class BackboneLayer {
+        +Attention attn
+        +FFN ffn
+        +forward(x) Tensor
+    }
+    VWNStack "1" o-- "n" BackboneLayer : 骨干保持宽度 D
+    VWNStack "1" o-- "2n" GHyperConnection : 每层注意力与 FFN 各一个
+    BackboneLayer ..> GHyperConnection : 输入先压缩
+    GHyperConnection ..> BackboneLayer : 输出后写回
+    TransformerBlock --> GHyperConnection

@@ -1,0 +1,9 @@
+flowchart TB
+    SWA["滑窗注意力 (SWA)"]
+    SWA --> G1["① 全层纯 SWA（已被产业界放弃）<br/>Longformer（局部窗口+全局 token）<br/>Mistral-7B v0.1/v0.2（W=4096）<br/>⚠️ Mistral 自家从 v0.3 起 sliding_window=null"]
+    SWA --> G2["② 层间混合 SWA（2024 后唯一在用的形态）<br/>Gemma-2 1:1 (W=4096) · Gemma-3 5:1 (W=1024)<br/>GPT-OSS 1:1 (W=128，奇偶交替)<br/>Command A+ 3:1 (W=4096)<br/>以【层】为粒度"]
+    SWA --> G3["③ token 类型分化 SWA（PHD-SWA）<br/>original token：全注意力（长程不丢）<br/>hidden decoding token：W=16 局部窗口<br/>以【token 类型】为粒度；所有层共用同一 mask"]
+    SWA --> G4["④ 推理期免训练 SWA<br/>StreamingLLM（sink + 滑窗）"]
+    SWA --> G5["⑤ 其他局部化路线（易被误认为 SWA）<br/>Llama 4：chunked local attention（8192）<br/>Phi-3-small：block-sparse<br/>Qwen3-Next：Gated DeltaNet 3:1"]
+    G3 -.->|"正交可叠加（推测）"| G2
+    style G3 fill:#ffe9b0

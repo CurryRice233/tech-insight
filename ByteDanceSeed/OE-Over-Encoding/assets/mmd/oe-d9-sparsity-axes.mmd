@@ -1,0 +1,9 @@
+flowchart LR
+    subgraph AX["扩容的三条稀疏性来源"]
+        A1["MoE：条件计算<br/>每 token 激活少量专家<br/>代价：访存与 all-to-all 通信高"]
+        A2["OE / Engram：条件记忆<br/>O(1) 静态查表<br/>代价：显存大、算力近零"]
+        A3["VWN：虚拟宽度<br/>嵌入/残差加宽<br/>代价：激活 I/O"]
+    end
+    A1 --> BAL["Sparsity Allocation<br/>在算力与静态内存之间<br/>存在 U 型最优配比（Engram 提出）"]
+    A2 --> BAL
+    A3 -.->|"正交可叠加（推测）"| BAL

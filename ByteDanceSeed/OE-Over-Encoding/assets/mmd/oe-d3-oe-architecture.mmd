@@ -1,0 +1,36 @@
+classDiagram
+    class OverEncodingEmbedding {
+        +int V
+        +int m
+        +int n
+        +int k
+        +Embedding wte
+        +ModuleList oe_embedders
+        +ModuleList oe_projs
+        +forward(input_ids) Tensor
+        -build_ngram_ids(input_ids) Tensor
+        -hash_lookup(ngram_ids, index) Tensor
+    }
+    class HashingEmbedder {
+        +int rows
+        +int dim
+        +forward(ngram_ids) Tensor
+    }
+    class LowRankProjection {
+        +Linear proj
+        +forward(embed) Tensor
+    }
+    class OverDecodingHead {
+        +ModuleList tables
+        +ModuleList projections
+        +List lambda_weights
+        +forward(hidden) List
+    }
+    class BackboneTransformer {
+        +int layers
+        +forward(x) Tensor
+    }
+    OverEncodingEmbedding "1" o-- "k*(n-1)" HashingEmbedder : 哈希查表
+    OverEncodingEmbedding "1" o-- "k*(n-1)" LowRankProjection : 低秩升维
+    OverEncodingEmbedding ..> BackboneTransformer : 加宽后的输入嵌入
+    OverDecodingHead ..> BackboneTransformer : 多 token 监督

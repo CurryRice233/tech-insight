@@ -1,0 +1,7 @@
+flowchart TB
+    PY["Python / Triton 源码<br/>triton_dist.language 原语"] --> DL["Distributed / SIMT Dialect<br/>（新增 MLIR dialect）"]
+    DL --> LOW["Lowering Passes<br/>TritonDistributedToTritonGPU<br/>TritonDistributedToLLVM"]
+    LOW --> BC["LLVM IR + bitcode library<br/>（含 NVSHMEM / AMD / METAX 变体）"]
+    BC --> K["生成 kernel"]
+    PL["Plugin / Patches<br/>axisinfo hook · pipeliner predicate hook<br/>Triton 3.7 起 plugin 化"] --> DL
+    K --> HW["NVIDIA SM80/89/90a · AMD CDNA3(MI308X)<br/>MetaX · Ascend（停放/独立移植）"]

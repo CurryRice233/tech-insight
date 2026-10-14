@@ -1,0 +1,21 @@
+flowchart TB
+    R["残差连接 (ResNet 2015 / Transformer 2017)"] --> HC["Hyper-Connections<br/>2024-09 · arXiv:2409.19606"]
+    R --> ALT["AltUp<br/>arXiv:2301.13310 · NeurIPS 2023"]
+    HC --> FC["Frac-Connections<br/>2025-03 · arXiv:2503.14125"]
+    OT["Over-Tokenized Transformer<br/>2025-01 · arXiv:2501.16975 · ICML 2025"] --> VWN
+    MTP["MTP · arXiv:2404.19737 / DeepSeek-V3"] --> VWN
+    HC --> VWN["Virtual Width Networks<br/>2025-11 · arXiv:2511.11238<br/>超宽嵌入 + GHC"]
+
+    HC --> MHC["mHC · DeepSeek<br/>2025-12 · arXiv:2512.24880 · ICML 2026"]
+    MHC --> V4["DeepSeek V4-Pro / V4-Flash<br/>hc_mult = 4"]
+    MHC --> V41["DeepSeek V4.1-Flash<br/>Single-Pass mHC"]
+    MHC --> XHC["xHC<br/>2026-07 · arXiv:2607.14530 · NeurIPS 2026<br/>N=16, k=4"]
+    MHC --> S2HC["s²HC<br/>2026-03 · arXiv:2603.20896"]
+
+    VWN --> EAGLE["VWN-Eagle3 · vllm-ascend<br/>r=1.5 投机解码草稿"]
+    VWN -.->|"术语被借用，机制不同"| MOUE["MoUE<br/>2026-03 · arXiv:2603.04971<br/>深度 → 虚拟宽度"]
+    VWN -.->|"轴不同，同构思路"| HD["Hidden Decoding · 微信 AI<br/>2026-07 · arXiv:2607.08186<br/>序列流数扩展"]
+    ATT["AttnRes · Kimi<br/>2026-03 · arXiv:2603.15031"] -.->|"深度轴算子选择"| VWN
+    LMOE["LatentMoE · NVIDIA<br/>2026-01 · arXiv:2601.18089"] -.->|"反向：专家侧压缩"| VWN
+
+    style VWN fill:#ffe9b0

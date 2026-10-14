@@ -1,0 +1,14 @@
+flowchart LR
+    FP["FlexPrefill<br/>2025-02 · ICLR 2025 Oral<br/>在线判定模式 + 预算<br/>prefill-only 免训练稀疏"]
+
+    FP --> A1["同类 prefill 稀疏<br/>UniPrefill · RBS-Attention<br/>CRISP · CompactAttention · SpotAttention"]
+    FP --> A2["独立重实现<br/>FlashPrefill · FlashPrefill V2"]
+    FP --> A3["工业模型自研<br/>MiniMax Sparse Attention"]
+    FP --> A4["视频 / 扩散生成<br/>SPADE · Sol-Attn · DFSAttn<br/>HyperVAttention · WaveAlign"]
+    FP --> A5["3D / 视觉<br/>ReSS · SAF3R"]
+    FP --> A6["理论与索引结构<br/>矩阵近似视角 · 范围搜索视角<br/>IndexCache · MassAlloc"]
+    FP --> A7["训练侧反哺<br/>Full Attention Strikes Back · UNIQUE"]
+
+    MIn["MInference<br/>离线搜 pattern + 固定 ratio"] -.->|"被在线自适应替代"| FP
+    STREAM["StreamingLLM<br/>静态 sink + 滑窗"] -.->|"长端崩塌，作为反面证据"| FP
+    style FP fill:#ffe9b0

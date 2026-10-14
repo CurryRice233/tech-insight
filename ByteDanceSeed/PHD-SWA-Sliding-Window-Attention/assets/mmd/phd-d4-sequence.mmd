@@ -1,0 +1,17 @@
+sequenceDiagram
+    autonumber
+    participant X as 输入 token 序列 x
+    participant R as 交错重复 + 重排
+    participant L as Transformer 层
+    participant KV as KV 生命周期管理
+    participant HD as 预测头
+
+    X->>R: t 个 token
+    R->>R: 每 token 重复 K 次并交错
+    R->>R: 重排为「original 组 t + hidden 组 (K-1)t」<br/>使被 mask 区域连续
+    R->>L: 前向（attention 复杂度 O(K)）
+    L->>KV: 只有第 1 份（original）写入持久 KV
+    L->>KV: 第 2..K 份仅在同位置/窗口/chunk 内可见，用完即丢
+    L->>HD: 取第 K 份副本的隐状态
+    HD->>HD: 预测下一个 token（loss 只用第 K 份）
+    Note over KV: 推理期持久 KV 与 vanilla 相同<br/>PHD-SWA/CSWA 额外 O(1) 窗口 KV

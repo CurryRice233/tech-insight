@@ -1,0 +1,14 @@
+sequenceDiagram
+    autonumber
+    participant QKV as 本地 QKV GEMM
+    participant NET as 远端 rank（all-to-all）
+    participant ATT as 本地 attention
+    participant O as 本地 O 投影 GEMM
+    QKV->>QKV: 计算本地 Q/K/V 投影（GEMM）
+    QKV->>NET: transpose A2A：epilogue 内 putmem 远端写<br/>（头维 → 序列维）
+    NET->>NET: signal_op 通知数据就绪
+    NET->>ATT: 本地 rank 被 notify，开始 attention
+    ATT->>NET: reverse A2A：getmem 远端读<br/>（序列维 → 头维）
+    NET->>O: prologue 直接喂给 O 投影 GEMM
+    O->>O: 完成 O 投影
+    Note over QKV,O: 两个方向各自把 all-to-all 融进 GEMM 的<br/>epilogue / prologue，省掉一次显存往返与一次 kernel 启动

@@ -1,0 +1,15 @@
+flowchart LR
+    HC["Hyper-Connections (HC)<br/>arXiv:2409.19606<br/>ByteDance Seed, 2024-09<br/>残差流 ×n + 学习映射"]
+    FC["Frac-Connections (FC)<br/>arXiv:2503.14125<br/>ByteDance Seed, 2025-03<br/>不扩宽，切分隐藏维"]
+    ALT["AltUp<br/>arXiv:2301.13310<br/>Google, NeurIPS 2023<br/>多预测器交替更新"]
+    OT["Over-Tokenized Transformer<br/>arXiv:2501.16975<br/>ByteDance Seed, ICML 2025<br/>Over-Encoding / Over-Decoding"]
+    MTP["Multi-Token Prediction<br/>arXiv:2404.19737 / DeepSeek-V3"]
+    GHC["GHC（本文）<br/>统一 HC 与 FC<br/>既扩宽又分段"]
+    VWN["VWN<br/>超宽嵌入 + GHC + MTP 协同"]
+
+    HC -->|"被统一"| GHC
+    FC -->|"被统一"| GHC
+    ALT -->|"家族简化实例"| VWN
+    OT -->|"输入增强思想"| VWN
+    MTP -->|"输出侧监督"| VWN
+    GHC --> VWN

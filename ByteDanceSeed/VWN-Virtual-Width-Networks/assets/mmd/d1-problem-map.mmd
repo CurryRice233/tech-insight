@@ -1,0 +1,39 @@
+flowchart TB
+    subgraph COST["算力与成本墙"]
+        A1["hidden dim 加宽<br/>N ≈ 12·L·D²，C ≈ 6N<br/>D 翻倍 = FLOPs ×4"]
+        A2["预算固定时<br/>宽度扩展性价比崩塌"]
+        A3["SP 参数化下<br/>最优学习率随宽度漂移"]
+    end
+
+    subgraph CAP["容量与表征瓶颈"]
+        B1["MoE 只扩 FFN 内部维度<br/>Qwen2-7B vs 57B：hidden 均 3584"]
+        B2["EP all-to-all：计算/通信比 ≈ 1:1<br/>all-to-all 占 20/132 个 SM"]
+        B3["单条残差流 = 固定带宽瓶颈<br/>HC n=1 无效，必须真加宽"]
+        B4["路由坍塌 / 表征坍塌 / 专家欠训练"]
+    end
+
+    subgraph SYS["系统与硬件墙"]
+        C1["FLOPS 3.0×/2年 vs DRAM 1.6×/2年<br/>vs 互联 1.4×/2年"]
+        C2["decode 算术强度 ~1 FLOP/byte<br/>对比 H100 拐点 ~295"]
+        C3["TP 同步量 ∝ b·s·h<br/>跨节点 all-reduce 不实用"]
+    end
+
+    subgraph KPI["产业 KPI 压力"]
+        D1["token 效率 = GPU 小时与电费<br/>Kimi K2 称其为 critical coefficient"]
+        D2["long CoT：R1 平均 8793 thinking tokens"]
+        D3["需要可预测的新缩放维度"]
+    end
+
+    A1 --> B1
+    B1 --> B3
+    B2 --> SYS
+    B3 --> C1
+    C1 --> C2
+    D1 --> A2
+    D2 --> D1
+
+    VWN["VWN：嵌入宽度 r×<br/>骨干宽度 D 不变"]
+    COST --> VWN
+    CAP --> VWN
+    VWN -.->|"需软硬件协同设计"| SYS
+    VWN -.->|"提供新缩放维度"| KPI

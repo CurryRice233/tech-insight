@@ -1,0 +1,19 @@
+flowchart LR
+    subgraph M1["PHD（基础）"]
+        direction TB
+        P1["original：全注意力<br/>全局 KV 常驻"]
+        P2["hidden：只看同位置更早副本<br/>KV 用完即丢"]
+    end
+    subgraph M2["PHD-SWA"]
+        direction TB
+        S1["original：全注意力<br/>全局 KV 常驻"]
+        S2["hidden：同位置副本 +<br/>最近 W=16 个 hidden 副本<br/>窗口 KV 常驻（O(1) 额外）"]
+    end
+    subgraph M3["PHD-CSWA"]
+        direction TB
+        C1["original：全注意力<br/>全局 KV 常驻"]
+        C2["hidden：滑窗只在自己所在的 chunk 内<br/>C=32，不跨 chunk"]
+        C3["额外 pre-filling 开销：<br/>仅最后一个 chunk 内 K 次重复"]
+    end
+    M1 -->|"补回局部依赖<br/>代价：pre-filling 超线性"| M2
+    M2 -->|"切断 chunk 间的顺序依赖<br/>代价：可忽略的性能损失"| M3

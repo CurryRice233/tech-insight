@@ -1,0 +1,39 @@
+classDiagram
+    class TritonDistLanguage {
+        +rank(axis) int
+        +num_ranks(axis) int
+        +symm_at(ptr, rank) ptr
+        +wait(barrierPtrs, numBarriers, scope, semantic)
+        +notify(ptr, rank, signal, sig_op, comm_scope)
+        +consume_token(value, token)
+    }
+    class LibShmemDevice {
+        +my_pe() int
+        +n_pes() int
+        +remote_ptr(local_ptr, pe) ptr
+        +putmem_nbi_block(dest, src, bytes, pe)
+        +putmem_signal_nbi_block(...)
+        +signal_op(...)
+        +signal_wait_until(...)
+        +barrier_all() / quiet() / fence()
+    }
+    class DistributedDialect {
+        +TritonDistributedToTritonGPU
+        +TritonDistributedToLLVM
+        +AxisInfoHook
+        +PipelinerPredicateHook
+    }
+    class OverlapKernel {
+        +str direction
+        +fuse_gemm_all2all(...)
+        +fuse_all2all_gemm(...)
+    }
+    class ShmemBackend {
+        +str vendor
+        +load_bitcode() void
+    }
+    TritonDistLanguage --> LibShmemDevice : 门面分发
+    TritonDistLanguage --> DistributedDialect : lower 到 LLVM IR
+    DistributedDialect --> OverlapKernel : 生成 kernel
+    LibShmemDevice --> ShmemBackend : nvshmem / rocshmem / mori / mxshmem / aclshmem
+    OverlapKernel --> ShmemBackend : 运行期调用

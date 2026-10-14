@@ -1,0 +1,13 @@
+sequenceDiagram
+    autonumber
+    participant DP as Data-Parallel Rank R
+    participant OTHER as 持有该 embedding 行的 DP Rank
+    participant GPU as 本地 GPU 计算
+
+    Note over DP,OTHER: 方案：embedding 表按行切分到所有 DP rank
+    DP->>OTHER: forward 1：all-to-all 发送 token id
+    OTHER->>OTHER: 本地查表得到 embedding 向量
+    OTHER->>DP: forward 2：all-to-all 送回 embedding 向量
+    DP->>GPU: 继续前向
+    Note over DP,OTHER: backward：1 次 all-to-all 回传梯度
+    Note over DP: 通信量显著低于 FSDP 的 all-gather

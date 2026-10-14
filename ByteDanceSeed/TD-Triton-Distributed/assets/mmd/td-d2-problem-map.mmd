@@ -1,0 +1,28 @@
+flowchart TB
+    subgraph PAIN["通信已成与计算同量级的成本"]
+        A1["DeepSeek-V3：计算/通信比 ≈ 1:1<br/>20/132 SM 用于通信，tensor core 闲置"]
+        A2["NVLink 160 GB/s vs IB 50 GB/s<br/>跨节点带宽成硬约束"]
+        A3["Megatron：TP 通信量 8bsh(t-1)/t"]
+        A4["COMET：MoE 层通信占整模执行 47%"]
+    end
+    subgraph ROUTE["两条路线"]
+        B1["host-initiated：NCCL + stream 重叠<br/>通信是独立 kernel，只能时间上重叠"]
+        B2["device-initiated：kernel 内单边通信<br/>通信与计算空间上融合"]
+    end
+    subgraph SP["序列并行的结构性需求"]
+        C1["Ulysses：attention 前后各一次 all-to-all"]
+        C2["transpose（头→序列）与 reverse（序列→头）"]
+        C3["天然可与 GEMM 的 epilogue / prologue 融合"]
+    end
+    subgraph HW["多厂商现实"]
+        D1["NVSHMEM / ROCSHMEM+MORI / mxshmem / ACLSHMEM<br/>四套单边通信 API"]
+        D2["缺统一抽象 ⇒ 跨厂商移植成本高"]
+    end
+    A1 --> B2
+    A2 --> B2
+    B1 -.->|"粒度太粗"| B2
+    C1 --> C3
+    C3 --> TD["Triton-distributed：<br/>分布式 Triton 编译器 + shmem 门面 + 融合 kernel 库"]
+    B2 --> TD
+    D1 --> TD
+    D2 --> TD

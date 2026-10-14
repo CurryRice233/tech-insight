@@ -1,0 +1,12 @@
+flowchart LR
+    PHD["PHD-Transformer<br/>2025-04 · arXiv:2504.14992<br/>重复 token + KV 生命周期管理<br/>PHD / PHD-SWA / PHD-CSWA"]
+    HD["Hidden Decoding at Scale · 腾讯微信 AI<br/>2026-07 · arXiv:2607.08186<br/>每 token 扩 n 条 stream + 独立 embedding 表<br/>WeLM-HD4-80B / 617B"]
+    SEQ["Sequential-Hidden-Decoding-8B<br/>n2 / n4 / n8 · 已开源权重"]
+    MIX["层间混合 SWA<br/>Gemma-2/3 · GPT-OSS"]
+    KV["decode 期 KV 淘汰<br/>H2O · Quest · StreamingLLM"]
+
+    PHD -.->|"同方向，独立演化<br/>论文间无引用"| HD
+    HD --> SEQ
+    PHD -.->|"正交可叠加"| MIX
+    PHD -.->|"正交（训练期 vs 解码期）"| KV
+    style PHD fill:#ffe9b0

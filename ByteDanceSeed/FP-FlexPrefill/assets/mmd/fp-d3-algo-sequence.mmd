@@ -1,0 +1,22 @@
+sequenceDiagram
+    autonumber
+    participant QK as Q / K 输入
+    participant PS as Sparse Pattern Search
+    participant QA as Query Aware Index
+    participant VS as Vertical Slash Index
+    participant KER as 稀疏注意力 Kernel
+
+    QK->>PS: Q̂（最后 block_size 个 query）+ K
+    PS->>PS: 池化估计 ā 与真实分布 â
+    PS->>PS: 算 D_JS 并与 τ 比较
+    alt D_JS < τ（估计可信）
+        PS->>QA: pattern = query_specific
+        QA->>QA: 块级分数降序累加至 ≥ γ
+        QA->>KER: 索引集 S（块级、逐 query）
+    else D_JS ≥ τ（估计不可信）
+        PS->>VS: pattern = vertical_slash
+        VS->>VS: 竖线/斜线分数降序累加至 ≥ γ
+        VS->>KER: 索引集 S（竖线 ∪ 斜线，外推到全局）
+    end
+    KER->>KER: 施加最小预算 1024 与首尾 key block 保底
+    KER->>QK: 输出 y = A(Q, K, V, S)

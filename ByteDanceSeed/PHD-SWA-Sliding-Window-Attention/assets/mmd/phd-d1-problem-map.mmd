@@ -1,0 +1,27 @@
+flowchart TB
+    subgraph KV["KV cache 的结构性成本"]
+        A1["全注意力：KV 随序列长度线性增长"]
+        A2["长上下文推理的显存与带宽被 KV 主导"]
+    end
+    subgraph SWA["SWA 的固有张力"]
+        B1["省 KV：每 token 只看最近 W 个"]
+        B2["丢长程：窗口外信息不可见"]
+        B3["产业解：层间混合 SWA<br/>Gemma-2/3 · GPT-OSS · Mistral"]
+        B4["反例：固定 sink+滑窗在<br/>RULER 长端崩塌（StreamingLLM）"]
+    end
+    subgraph HID["隐式多步计算路线"]
+        C1["Pause Token / Coconut / CoTFormer<br/>让模型多想几步"]
+        C2["朴素做法：重复输入 token K 次"]
+        C3["代价：KV ≈ K 倍<br/>pre-filling 超线性<br/>解码延迟线性"]
+    end
+    A2 --> B1
+    B1 --> B2
+    B2 --> B3
+    B2 --> B4
+    C1 --> C2
+    C2 --> C3
+    C3 --> PHD["PHD：只让 original token 建 KV<br/>hidden 副本用完即丢"]
+    B1 --> PHD
+    PHD --> SWA2["PHD-SWA：给 hidden 副本加 W 窗口<br/>补回局部依赖"]
+    SWA2 --> CSWA["PHD-CSWA：chunk 内限制滑窗<br/>把额外开销压到最后一个 chunk"]
+    B4 -.->|"长上下文未验证的空白"| CSWA

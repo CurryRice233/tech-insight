@@ -1,0 +1,22 @@
+sequenceDiagram
+    autonumber
+    participant ID as 输入 token id
+    participant NG as n-gram 构造
+    participant H as 哈希嵌入表
+    participant P as 低秩投影
+    participant S as 求和与归一化
+    participant T as Transformer 骨干
+    participant U as 输出层 unembedding
+
+    ID->>NG: 基础分词器给出 id 序列
+    NG->>NG: x^(i) = x + pad(x,i-1) * V^(i-1)，i = 2 到 n
+    loop 每个 i-gram 与每个切片 j
+        NG->>H: 索引 = n_gram_id mod (m + 2*index)
+        H->>P: 取出一行 d/k 维向量
+        P->>S: W_i 投影到 d_model
+    end
+    ID->>S: 1-gram 嵌入，与基线一致（权重绑定）
+    S->>S: 求和后除以 1 + k*(n-1)
+    S->>T: 送入骨干，宽度与序列长度均不变
+    T->>U: 输出 logits，词表仍为 V
+    U->>U: 可选：OD 头做 n-gram 细粒度监督

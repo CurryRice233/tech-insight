@@ -1,0 +1,13 @@
+flowchart TB
+    API["triton.language.extra.libshmem_device<br/>（ModuleProxy 门面，按谓词分发）"]
+    API --> CUDA["cuda/libnvshmem_device.py<br/>NVIDIA NVSHMEM"]
+    API --> HIP1["hip/librocshmem_device.py<br/>AMD ROCSHMEM"]
+    API --> HIP2["hip/libmori_shmem_device.py<br/>AMD MORI"]
+    API --> MACA["maca/libmxshmem_device.py<br/>MetaX（沐曦）"]
+    API --> ASC["ascend/libaclshmem_device.py<br/>昇腾 ACLSHMEM（含 udma_* 原语）"]
+    BIND["shmem/ 目录（绑定与运行时）"] --> N1["nvshmem_bind"]
+    BIND --> N2["rocshmem_bind"]
+    BIND --> N3["mxshmem_bind"]
+    N1 --> CUDA
+    N2 --> HIP1
+    N3 --> MACA

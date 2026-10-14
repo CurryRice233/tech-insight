@@ -1,0 +1,19 @@
+flowchart TB
+    BPE["BPE / Unigram<br/>子词分词（训练前冻结）"] --> OE["Over-Encoding (OE)<br/>2025-01 · arXiv:2501.16975 · ICML 2025<br/>n-gram 哈希嵌入放大输入词表"]
+    EARLY["早期 n-gram 记忆<br/>Huang 2021 lookup-table RLM · Roy 2022"] --> OE
+    BYTE["字节级路线 ByT5 / Canine / MegaByte"] -.->|"算力换密度，规模化落后"| OE
+    BLT["BLT（并发工作）<br/>字节级上的同一个 n-gram 哈希发现"] -.->|"互相印证"| OE
+
+    OE --> VWN["VWN · 同团队<br/>2025-11 · arXiv:2511.11238<br/>正交轴：放大向量维度"]
+    OE --> UM["UltraMemV2 · ByteDance Seed<br/>2025-08 · arXiv:2508.18756<br/>记忆网络扩到 120B"]
+    OE --> ENG["Engram / 条件记忆 · 北大 + DeepSeek<br/>2026-01 · arXiv:2601.07372<br/>第 4 条稀疏轴 + U 型配比律"]
+    OE --> EMB["Scaling Embeddings Outperforms Scaling Experts<br/>美团 LongCat · 2026-01 · arXiv:2601.21204<br/>per-layer n-gram 嵌入 → LongCat-Flash-Lite"]
+    OE --> SPEC["大词表推理<br/>Speculative Vocabulary 2602.13836 · DynaSpec 2510.13847"]
+    OE --> TOK["分词器设计线<br/>SuperBPE / Boundless BPE / TokSuite / Bolmo"]
+
+    ENG --> MOME["MoME · 上下文感知记忆<br/>2026-09 · arXiv:2609.15126"]
+    ENG --> TN["Tensorizing Engram (TN-gram)<br/>2026-06 · arXiv:2606.08347<br/>批评逐阶哈希表的冲突问题"]
+    ENG --> EGE["EngramEdit<br/>2026-10 · arXiv:2610.10533<br/>用条件记忆做知识更新"]
+    UM --> MOLKV["Mixture of Lookup Key-Value Experts<br/>2025-12 · arXiv:2512.09723"]
+
+    style OE fill:#ffe9b0

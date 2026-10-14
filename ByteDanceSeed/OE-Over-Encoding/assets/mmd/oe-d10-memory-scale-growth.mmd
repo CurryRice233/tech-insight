@@ -1,0 +1,6 @@
+flowchart LR
+    A["OE 论文 · 2025-01<br/>输入词表 12.8M<br/>（V=100k 的 128×）"] --> B["Engram-27B · DeepSeek<br/>2026-01 · 5.7B 记忆参数<br/>（占 21.3%）"]
+    B --> C["Qwen3.8-Flash-Next · 阿里<br/>2026-08 · 51.2B<br/>（3.2 亿行 × 160 维，16 个 hash head）"]
+    C --> D["DeepSeek-V4.1-Flash<br/>196B（占 26.2%）<br/>Scale Engram"]
+    A -.->|"同一思想的四代放大"| D
+    style A fill:#ffe9b0

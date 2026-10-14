@@ -1,0 +1,34 @@
+flowchart TB
+    subgraph PAIN["长上下文推理的痛点"]
+        A1["Prefill 注意力 FLOPs 随 L 平方增长<br/>成为 TTFT 主导项"]
+        A2["Decode 侧已有 KV cache 优化<br/>对 prefill 无效"]
+        A3["128K/1M 窗口 + 长 prompt 短输出<br/>成为主流用法"]
+    end
+
+    subgraph ROUTE["既有稀疏路线的硬伤"]
+        B1["静态/固定模式：<br/>需要继续训练，模式与数据不匹配"]
+        B2["StreamingLLM 类免训练固定模式：<br/>RULER 随长度崩塌"]
+        B3["MInference 类离线搜索：<br/>模式与稀疏率预定义，空间有限"]
+    end
+
+    subgraph OBS["论文的两条关键观察"]
+        C1["同一 head 的稀疏模式<br/>随 query 变化（diverse）"]
+        C2["不同输入需要<br/>不同的稀疏率"]
+    end
+
+    subgraph ENG["工程约束"]
+        D1["索引选择本身要花时间<br/>估计成本必须远小于节省"]
+        D2["必须能塞进单个 kernel<br/>否则中间结果搬运吃掉收益"]
+        D3["必须免训练"]
+    end
+
+    A3 --> A1
+    A2 --> A1
+    B1 --> C1
+    B3 --> C2
+    C1 --> FP["FlexPrefill：<br/>运行时逐 head 决定<br/>模式 + 稀疏率"]
+    C2 --> FP
+    D1 --> FP
+    D2 --> FP
+    D3 --> FP
+    B2 -.->|"反面证据"| FP

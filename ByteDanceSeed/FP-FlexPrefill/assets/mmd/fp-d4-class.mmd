@@ -1,0 +1,38 @@
+classDiagram
+    class FlexPrefillAttention {
+        +float gamma
+        +float tau
+        +int block_size
+        +int min_budget
+        +int max_budget
+        +forward(Q, K, V) Tensor
+    }
+    class PatternSearcher {
+        +int block_size
+        +float tau
+        +select_representative_queries(Q) Tensor
+        +estimate_block_distribution(Qhat, K) Tensor
+        +true_block_distribution(Qhat, K) Tensor
+        +js_divergence(a_est, a_true) float
+        +decide_pattern() str
+    }
+    class QueryAwareIndex {
+        +float gamma
+        +select_blocks(a_est) Tensor
+    }
+    class VerticalSlashIndex {
+        +float gamma
+        +select_lines(Qhat, K) Tuple
+        +expand_to_global(lines) Tensor
+    }
+    class SparseAttentionKernel {
+        +Tensor sparse_forward(Q, K, V, S) Tensor
+        +apply_min_budget(S, min_budget) Tensor
+        +keep_first_last_key_blocks(S) Tensor
+    }
+    FlexPrefillAttention *-- PatternSearcher
+    FlexPrefillAttention *-- QueryAwareIndex
+    FlexPrefillAttention *-- VerticalSlashIndex
+    FlexPrefillAttention *-- SparseAttentionKernel
+    PatternSearcher ..> QueryAwareIndex : D_JS < tau
+    PatternSearcher ..> VerticalSlashIndex : D_JS >= tau

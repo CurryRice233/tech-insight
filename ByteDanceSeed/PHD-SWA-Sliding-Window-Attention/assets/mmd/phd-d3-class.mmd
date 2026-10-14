@@ -1,0 +1,31 @@
+classDiagram
+    class PHDTransformer {
+        +int K
+        +int W
+        +int C
+        +str variant
+        +build_interleaved_sequence(x) Tensor
+        +forward(x) Tensor
+    }
+    class MaskPolicy {
+        +build_mask(K, W, C) Tensor
+        +original_to_all()
+        +same_position_copies()
+        +hidden_window(W)
+    }
+    class RearrangeOptimizer {
+        +split_original_and_hidden(x) Tuple
+        +concat_groups() Tensor
+        +blockify_masked_region() Tensor
+    }
+    class KVCacheManager {
+        +int persistent_kv_size
+        +int transient_kv_size
+        +store_original_only() void
+        +drop_hidden_after_use() void
+    }
+    PHDTransformer *-- MaskPolicy
+    PHDTransformer *-- RearrangeOptimizer
+    PHDTransformer *-- KVCacheManager
+    MaskPolicy ..> KVCacheManager : 决定谁需要驻留
+    RearrangeOptimizer ..> PHDTransformer : O(K^2) 降到 O(K)

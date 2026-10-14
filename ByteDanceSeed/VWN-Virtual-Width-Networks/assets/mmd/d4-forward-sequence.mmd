@@ -1,0 +1,27 @@
+sequenceDiagram
+    autonumber
+    participant E as 词表嵌入
+    participant W as 升维算子 W_expand
+    participant G as GHC 宽度连接
+    participant T as 骨干子层 Attn 或 FFN
+    participant C as 携带算子 Â
+    participant R as 降维与 GroupNorm
+    participant U as 反嵌入 Unembedding
+
+    E->>W: token id 查表得到 D 维嵌入
+    W->>W: D 维扩为 r·D 超宽嵌入，大 r 用低秩分解
+    W->>G: H'0 形状 (D/m) × n
+
+    loop 每一层 l = 1 到 L
+        G->>G: Ȧᵀ H'l-1 压缩到骨干宽度 D
+        G->>C: Âᵀ H'l-1 生成携带分支
+        G->>T: 送入注意力或 FFN
+        T->>G: 输出 z l，宽度 D
+        G->>G: Bᵀ z l 写回超宽空间
+        G->>C: 与携带分支相加，更新 H'l
+    end
+
+    C->>R: H'L 超宽隐藏状态
+    R->>R: GroupNorm，组大小为 D
+    R->>U: W_reduce 投影回 D 维
+    U->>U: 生成 logits，可叠加 MTP 头
