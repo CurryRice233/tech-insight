@@ -1,8 +1,21 @@
-# ByteDance Seed 技术洞察总览
+# 技术洞察总览（tech-insight）
 
-> **本文用途**：汇总根目录下 5 篇技术洞察的核心结论、**技术点提出时间**与相互关系，便于快速选读与横向比较。
-> **汇总日期**：2026-10-14　｜　**时间口径**：一律采用 **arXiv v1 首次投稿时间**（UTC），已在 §1 表中标注。
+> **本文件是本仓库的 README**，同时充当各技术点的总览：汇总核心结论、**技术点提出时间**与相互关系，便于快速选读与横向比较。
+> **汇总日期**：2026-10-14　｜　**时间口径**：一律采用 **arXiv v1 首次投稿时间**（UTC），已在 §一 表中标注。
 > **详细报告**：各技术点的完整三章（技术背景 / 技术介绍 / 技术影响）+ 附录见对应 md 文件。
+
+**仓库结构**（一级目录 = 公司/实验室，逐家扩展）：
+
+```
+tech-insight/
+├── README.md                     ← 本文件（总览 / 导航）
+├── .agents/skills/tech-insight/  ← 产出此类洞察的 skill
+└── ByteDanceSeed/                ← 当前已收录；每篇洞察一个文档 + 一个同名文件夹
+    ├── Seed-<技术点>-技术洞察.md
+    └── <技术点缩写>-<技术点名>/{research,assets}
+```
+
+**当前收录**：**ByteDance Seed** —— VWN（虚拟宽度网络）、Over-Encoding（OE）、FlexPrefill、PHD-SWA、Triton-distributed，共 5 个技术点。
 
 ---
 
@@ -10,11 +23,11 @@
 
 | # | 技术点 | 提出时间（arXiv v1） | 编号 / 会议 | 一句话定位 | 最硬的一个数字 | 详细报告 |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | **Over-Encoding（OE）** | **2025-01-28** | arXiv:2501.16975 ／ **ICML 2025** | 把**输入词表**当缩放维度：n-gram 哈希嵌入把词表放大 128× | 400M 的 OE 模型**匹配 1B 基线** | [Seed-OE-技术洞察.md](Seed-OE-技术洞察.md) |
-| 2 | **FlexPrefill** | **2025-02-28** | arXiv:2502.20766 ／ **ICLR 2025 Oral** | **免训练**的 prefill 稀疏注意力：运行时逐 head 决定稀疏模式与预算 | γ=0.95 时**精度反超全注意力且快 2.43×** | [Seed-FlexPrefill-技术洞察.md](Seed-FlexPrefill-技术洞察.md) |
-| 3 | **PHD-SWA** | **2025-04-21** | arXiv:2504.14992 ／ 无会议 | 重复 token 换"隐式计算步"：**滑窗只加在隐藏副本上** | 1.2B 平均分 **54.7 → 56.7** | [Seed-PHD-SWA-技术洞察.md](Seed-PHD-SWA-技术洞察.md) |
-| 4 | **Triton-distributed** | **2025-04-28** | arXiv:2504.19442 ／ 无会议 | **device-initiated 通信**：把 all-to-all 融进 GEMM 的 epilogue/prologue | AG+MoE **44.97×** vs PyTorch+NCCL | [Seed-Triton-distributed-技术洞察.md](Seed-Triton-distributed-技术洞察.md) |
-| 5 | **VWN（虚拟宽度网络）** | **2025-11-14** | arXiv:2511.11238 ／ 无会议 | 把**嵌入宽度**与骨干宽度解耦：r× 超宽嵌入 + 广义超连接 | 8× 虚拟宽度下**少 2.5× / 3.5× token** | [Seed-VWN-技术洞察.md](Seed-VWN-技术洞察.md) |
+| 1 | **Over-Encoding（OE）** | **2025-01-28** | arXiv:2501.16975 ／ **ICML 2025** | 把**输入词表**当缩放维度：n-gram 哈希嵌入把词表放大 128× | 400M 的 OE 模型**匹配 1B 基线** | [Seed-OE-技术洞察.md](ByteDanceSeed/Seed-OE-技术洞察.md) |
+| 2 | **FlexPrefill** | **2025-02-28** | arXiv:2502.20766 ／ **ICLR 2025 Oral** | **免训练**的 prefill 稀疏注意力：运行时逐 head 决定稀疏模式与预算 | γ=0.95 时**精度反超全注意力且快 2.43×** | [Seed-FlexPrefill-技术洞察.md](ByteDanceSeed/Seed-FlexPrefill-技术洞察.md) |
+| 3 | **PHD-SWA** | **2025-04-21** | arXiv:2504.14992 ／ 无会议 | 重复 token 换"隐式计算步"：**滑窗只加在隐藏副本上** | 1.2B 平均分 **54.7 → 56.7** | [Seed-PHD-SWA-技术洞察.md](ByteDanceSeed/Seed-PHD-SWA-技术洞察.md) |
+| 4 | **Triton-distributed** | **2025-04-28** | arXiv:2504.19442 ／ 无会议 | **device-initiated 通信**：把 all-to-all 融进 GEMM 的 epilogue/prologue | AG+MoE **44.97×** vs PyTorch+NCCL | [Seed-Triton-distributed-技术洞察.md](ByteDanceSeed/Seed-Triton-distributed-技术洞察.md) |
+| 5 | **VWN（虚拟宽度网络）** | **2025-11-14** | arXiv:2511.11238 ／ 无会议 | 把**嵌入宽度**与骨干宽度解耦：r× 超宽嵌入 + 广义超连接 | 8× 虚拟宽度下**少 2.5× / 3.5× token** | [Seed-VWN-技术洞察.md](ByteDanceSeed/Seed-VWN-技术洞察.md) |
 
 > 前四篇集中在 **2025 年 1–4 月**（约 3 个月内），第五篇 VWN 在 **2025 年 11 月**——这一节奏本身就是 Seed 在"扩容新维度"上密集下注的证据。
 
@@ -88,7 +101,7 @@ flowchart LR
 
 | 项 | 说明 |
 | --- | --- |
-| ⏳ **待你确认的一处修订** | [Seed-FlexPrefill-技术洞察.md](Seed-FlexPrefill-技术洞察.md) 的 §3.1/§3.7 尚未补入两项内容：①The Sparse Frontier 的独立反证（τ=0 条件下不如均匀 Vertical-Slash）；②引用坐标系（138 篇 vs MInference 487 / NSA 551 / MoBA 221，且 HF upvote 仅 1）。本文 §三.2 已按最新口径陈述，但那份详细报告仍待打补丁。 |
+| ⏳ **待你确认的一处修订** | [Seed-FlexPrefill-技术洞察.md](ByteDanceSeed/Seed-FlexPrefill-技术洞察.md) 的 §3.1/§3.7 尚未补入两项内容：①The Sparse Frontier 的独立反证（τ=0 条件下不如均匀 Vertical-Slash）；②引用坐标系（138 篇 vs MInference 487 / NSA 551 / MoBA 221，且 HF upvote 仅 1）。本文 §三.2 已按最新口径陈述，但那份详细报告仍待打补丁。 |
 | 想快速判断"值不值得做" | 先读每篇的 **TL;DR 表** + **§3 技术影响**；篇内的"未找到/不可外推"小节是最容易被忽略、也最关键的部分。 |
 | 与国产硬件最相关 | 第 4 篇（Triton-distributed，含昇腾移植与 UDMA 实践）。 |
 | 最容易踩坑的两处 | ①PHD-SWA 常被当成"通用 SWA"，实际是**token 类型分化 SWA**且**无长上下文验证**；②"flex attention"常被混为 PyTorch 的 `flex_attention`，与 FlexPrefill **无同源、无互引、无代码依赖**。 |
